@@ -11,6 +11,12 @@ except:
 
 llm = OllamaLLM(model=config.model, callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]), temperature=config.temperature)
 
+def exterminateCode(content):
+    start = content.find("```") + 3
+    end = content.find("```", start)
+    code = content[start:end].strip()
+    return code
+
 def save_code_file(task_nr, content):
     with open(f"zad{task_nr}_kod.html", 'w') as file:
         file.write(f"""
@@ -32,11 +38,8 @@ def save_code_file(task_nr, content):
         print("Zapisano")
 
 def save_to_file(task_nr, content):
-    start = content.find("```") + 3
-    end = content.find("```", start)
-    code = content[start:end].strip()
     with open(f"zad{task_nr}.html", 'w') as file:
-        file.write(code)
+        file.write(content)
         print("Zapisano")
 
 def main():
@@ -51,6 +54,7 @@ def main():
         while True:
             if input("Czy odpowiedź spełnia wymagania? y/n: ") == 'y':
                 task_nr = input("Podaj numer zadania: ")
+                zadanie = exterminateCode(zadanie)
                 save_to_file(task_nr, zadanie)
                 if input("Czy trzeba wykonać plik z kodem źródłowym?: ").lower() == 'y':
                     save_code_file(task_nr, zadanie)
