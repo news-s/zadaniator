@@ -32,8 +32,11 @@ def save_code_file(task_nr, content):
         print("Zapisano")
 
 def save_to_file(task_nr, content):
+    start = content.find("```") + 3
+    end = content.find("```", start)
+    code = content[start:end].strip()
     with open(f"zad{task_nr}.html", 'w') as file:
-        file.write(content)
+        file.write(code)
         print("Zapisano")
 
 def main():
